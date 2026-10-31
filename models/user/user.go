@@ -221,7 +221,7 @@ func (u *User) BeforeUpdate() {
 	u.LowerName = strings.ToLower(u.Name)
 	u.Location = util.TruncateRunes(u.Location, 255)
 	u.Website = util.TruncateRunes(u.Website, 255)
-	u.Description = util.TruncateRunes(u.Description, 255)
+	u.Description = util.TruncateRunes(u.Description, 65535)
 }
 
 // AfterLoad is invoked from XORM after filling all the fields of this object.

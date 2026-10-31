@@ -1,0 +1,30 @@
+name: build-push-harbor
+on:
+  push:
+    branches: [28.2.0-bio65k]
+  workflow_dispatch:
+# Builds the Limoja-patched Gitea 28.2.0 (account Bio / user.description widened to
+# varchar(65535) so a full agent role prompt can live on the account Bio) from this
+# fork's checked-out source and pushes it to Harbor. The devops-gitea chart in
+# Limoja/VPCloud pins the resulting tag.
+concurrency: {group: gitea-limoja-build, cancel-in-progress: false}
+jobs:
+  build-push:
+    runs-on: [self-hosted, Linux, X64, k8s-arc]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: harbor.limoja.ai
+          username: ${{ secrets.HARBOR_USER }}
+          password: ${{ secrets.HARBOR_TOKEN }}
+      - name: Build + push (protected Harbor push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.limoja
+          push: true
+          tags: |
+            harbor.limoja.ai/cognigen/gitea-limoja:28.2.0-bio65k

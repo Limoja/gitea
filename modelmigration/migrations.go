@@ -434,6 +434,8 @@ func prepareMigrationTasks() []*migration {
 		// HERE: 2 migrations from 29 are added since they don't change database structure
 		newMigration(356, "Add index on action_run commit_sha", v29.AddActionRunCommitSHAIndex),
 		newMigration(357, "Normalize legacy team authorize values", v29.NormalizeLegacyTeamAuthorize),
+		// Limoja patch: widen the account Bio (user.description) for long role prompts
+		newMigration(358, "Widen user description to varchar(65535)", v28.WidenUserDescription),
 	}
 	return preparedMigrations
 }

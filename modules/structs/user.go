@@ -90,7 +90,7 @@ type UserSettings struct {
 type UserSettingsOptions struct {
 	FullName      *string `json:"full_name" binding:"MaxSize(100)"`
 	Website       *string `json:"website" binding:"OmitEmpty;ValidUrl;MaxSize(255)"`
-	Description   *string `json:"description" binding:"MaxSize(255)"`
+	Description   *string `json:"description" binding:"MaxSize(65535)"`
 	Location      *string `json:"location" binding:"MaxSize(50)"`
 	Language      *string `json:"language"`
 	Theme         *string `json:"theme"`
