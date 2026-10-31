@@ -10,7 +10,7 @@ on:
 concurrency: {group: gitea-limoja-build, cancel-in-progress: false}
 jobs:
   build-push:
-    runs-on: [self-hosted, Linux, X64, k8s-arc]
+    runs-on: k8s-arc
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
