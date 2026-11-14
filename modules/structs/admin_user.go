@@ -57,7 +57,7 @@ type EditUserOption struct {
 	// The user's location or address
 	Location *string `json:"location" binding:"MaxSize(50)"`
 	// The user's personal description or bio
-	Description *string `json:"description" binding:"MaxSize(255)"`
+	Description *string `json:"description" binding:"MaxSize(1048576)"`
 	// Whether the user account is active
 	Active *bool `json:"active"`
 	// Whether the user has administrator privileges

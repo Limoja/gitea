@@ -165,7 +165,7 @@ type UpdateProfileForm struct {
 	KeepEmailPrivate    bool
 	Website             string `binding:"ValidSiteUrl;MaxSize(255)"`
 	Location            string `binding:"MaxSize(50)"`
-	Description         string `binding:"MaxSize(255)"`
+	Description         string `binding:"MaxSize(1048576)"` // LIMOJA PATCH: bio-capacity (role prompts live in the bio)
 	Visibility          structs.VisibleType
 	KeepActivityPrivate bool
 }
