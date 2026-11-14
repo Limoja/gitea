@@ -221,7 +221,10 @@ func (u *User) BeforeUpdate() {
 	u.LowerName = strings.ToLower(u.Name)
 	u.Location = util.TruncateRunes(u.Location, 255)
 	u.Website = util.TruncateRunes(u.Website, 255)
-	u.Description = util.TruncateRunes(u.Description, 255)
+	// LIMOJA PATCH (bio-capacity): role prompts live in the bio — the 255
+	// stock cap is raised to 1MB (20K words fits with headroom). The column
+	// is widened to TEXT by migration v357 (limoja).
+	u.Description = util.TruncateRunes(u.Description, 1<<20)
 }
 
 // AfterLoad is invoked from XORM after filling all the fields of this object.

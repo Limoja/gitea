@@ -1,0 +1,29 @@
+name: limoja-build
+on:
+  push:
+    branches: [limoja/28.2]
+  workflow_dispatch:
+jobs:
+  build-test-push:
+    runs-on: [self-hosted, arc]
+    steps:
+      - uses: actions/checkout@v4
+      - name: build the rootless image
+        run: |
+          TAG="28.2-limoja-$(git rev-parse --short HEAD)-rootless"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          docker build --target docker-rootless -t harbor.limoja.ai/cognigen/gitea:$TAG .
+      - name: capacity test (LAW: BIO-CAPACITY — 20K-word bio, byte-complete)
+        run: |
+          docker network create gt
+          docker run -d --name gitea-cap --network gt -p 3999:3000 \
+            -e GITEA__database__DB_TYPE=sqlite3 -e GITEA__server__ROOT_URL=http://localhost:3999/ \
+            harbor.limoja.ai/cognigen/gitea:$TAG
+          for i in $(seq 1 60); do curl -sf http://127.0.0.1:3999/api/v1/version >/dev/null 2>&1 && break; sleep 5; done
+          docker exec gitea-cap gitea admin user create --admin --username captest --password passw0rd!123 --email cap@test.local --must-change-password=false || true
+          TOKEN=$(docker exec gitea-cap gitea admin user generate-access-token -u captest -t cap-ci -s write:user,read:user 2>/dev/null | grep -oE 'gta_[A-Za-z0-9]+' | head -1)
+          [ -n "$TOKEN" ] || { echo "no token"; docker logs gitea-cap | tail -20; exit 1; }
+          GITEA_URL=http://127.0.0.1:3999 TOKEN=$TOKEN sh ./capacity-test.sh
+          RC=$?; docker rm -f gitea-cap; docker network rm gt; exit $RC
+      - name: push to harbor
+        run: docker push harbor.limoja.ai/cognigen/gitea:$TAG
