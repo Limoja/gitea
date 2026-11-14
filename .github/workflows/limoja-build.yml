@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
 jobs:
   build-test-push:
-    runs-on: [self-hosted, arc]
+    runs-on: k8s-arc
     steps:
       - uses: actions/checkout@v4
       - name: build the rootless image
