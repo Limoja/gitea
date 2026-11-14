@@ -15,7 +15,7 @@ jobs:
           TAG="28.2-limoja-$(git rev-parse --short HEAD)-rootless"
           echo "TAG=$TAG" >> $GITHUB_ENV
           docker build --target docker-rootless -t harbor.limoja.ai/cognigen/gitea:$TAG .
-      - name: capacity test (LAW: BIO-CAPACITY — 20K-word bio, byte-complete)
+      - name: "capacity test (BIO-CAPACITY: 20K-word bio, byte-complete)"
         run: |
           docker network create gt
           docker run -d --name gitea-cap --network gt -p 3999:3000 \
