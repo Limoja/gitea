@@ -15,11 +15,14 @@ PY
 WORDS=$(wc -w < $BIO_FILE); CHARS=$(wc -c < $BIO_FILE)
 echo "bio: ${WORDS} words, ${CHARS} chars"
 DESC=$(python3 -c "import json;print(json.dumps(open('/tmp/bio.txt').read()))" 2>/dev/null)
-CODE=$(curl -s -o /tmp/patch-resp.json -w '%{http_code}' -X PATCH "$GITEA_URL/api/v1/user" \
+# the provision's exact path: the ADMIN edit route (this is the one that
+# 422s MaxSize on stock Gitea — proven live)
+CODE=$(curl -s -o /tmp/patch-resp.json -w '%{http_code}' -X PATCH "$GITEA_URL/api/v1/admin/users/${TEST_USER:-captest}" \
   -H "Authorization: token $TOKEN" -H "Content-Type: application/json" -d "{\"description\": $DESC}")
 echo "PATCH: $CODE"
 [ "$CODE" = "200" ] || { echo "FAIL — PATCH rejected (stock cap?)"; cat /tmp/patch-resp.json; exit 1; }
-BACK=$(curl -s "$GITEA_URL/api/v1/user" -H "Authorization: token $TOKEN" | python3 -c "import json,sys;print(json.load(sys.stdin).get('description') or '')" 2>/dev/null)
+# the engine's exact read path: the anonymous public user GET
+BACK=$(curl -s "$GITEA_URL/api/v1/users/${TEST_USER:-captest}" | python3 -c "import json,sys;print(json.load(sys.stdin).get('description') or '')" 2>/dev/null)
 BACK_N=$(printf '%s' "$BACK" | wc -c)
 echo "GET back: ${BACK_N} chars"
 [ "$BACK_N" = "$CHARS" ] || { echo "FAIL — bio truncated on read ($BACK_N != $CHARS)"; exit 1; }
