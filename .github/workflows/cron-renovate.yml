@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   cron-renovate:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     if: github.repository == 'go-gitea/gitea' # prevent running on forks
     timeout-minutes: 30
     steps:

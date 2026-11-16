@@ -9,7 +9,7 @@ permissions: {}
 
 jobs:
   cron-licenses:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     if: github.repository == 'go-gitea/gitea'
     permissions:
       contents: write

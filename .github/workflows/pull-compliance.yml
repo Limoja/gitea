@@ -17,7 +17,7 @@ jobs:
   lint-backend:
     if: needs.files-changed.outputs.backend == 'true' || needs.files-changed.outputs.actions == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/go-setup
@@ -29,7 +29,7 @@ jobs:
   lint-on-demand:
     if: needs.files-changed.outputs.templates == 'true' || needs.files-changed.outputs.yaml == 'true' || needs.files-changed.outputs.actions == 'true' || needs.files-changed.outputs.docs == 'true' || needs.files-changed.outputs.swagger == 'true' || needs.files-changed.outputs.json == 'true' || needs.files-changed.outputs.shell == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/go-setup
@@ -56,7 +56,7 @@ jobs:
   checks-backend:
     if: needs.files-changed.outputs.backend == 'true' || needs.files-changed.outputs.actions == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/go-setup
@@ -66,7 +66,7 @@ jobs:
   frontend:
     if: needs.files-changed.outputs.frontend == 'true' || needs.files-changed.outputs.actions == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/node-setup
@@ -80,7 +80,7 @@ jobs:
   backend:
     if: needs.files-changed.outputs.backend == 'true' || needs.files-changed.outputs.actions == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/go-setup
