@@ -17,7 +17,7 @@ jobs:
   test-pgsql-shard-1:
     if: needs.files-changed.outputs.backend == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     timeout-minutes: 50
     services:
       pgsql:
@@ -55,7 +55,7 @@ jobs:
   test-pgsql-shard-2:
     if: needs.files-changed.outputs.backend == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     timeout-minutes: 50
     services:
       pgsql:
@@ -92,7 +92,7 @@ jobs:
   test-sqlite:
     if: needs.files-changed.outputs.backend == 'true' || needs.files-changed.outputs.actions == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: ./.github/actions/go-setup
@@ -114,7 +114,7 @@ jobs:
   test-unit:
     if: needs.files-changed.outputs.backend == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     services:
       elasticsearch:
         image: elasticsearch:8.19.23@sha256:3f4d63c59ca5a05b535179dfcced47a514119e351fa81653f69902beacae90c9
@@ -172,7 +172,7 @@ jobs:
   test-mysql:
     if: needs.files-changed.outputs.backend == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     services:
       mysql:
         # the bitnami mysql image has more options than the official one, it's easier to customize
@@ -219,7 +219,7 @@ jobs:
   test-mssql:
     if: needs.files-changed.outputs.backend == 'true'
     needs: files-changed
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, k8s-arc]
     services:
       mssql:
         image: mcr.microsoft.com/mssql/server:2019-latest@sha256:07d7dedecdbfcf6776035dc5eefb5bfd9aa1804b2f6b99f7dedb397d8a599069
